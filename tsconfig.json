@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+      "target": "esnext",
+      "module": "esnext",
+      "lib": ["esnext", "DOM"],
+      "moduleResolution": "Node",
+      "strict": true,
+      "sourceMap": true,
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "types": ["vite/client"],
+      "noEmit": true,
+      "noUnusedLocals": true,
+      "skipLibCheck": true,
+      "noUnusedParameters": true,
+      "noImplicitReturns": true,
+      "baseUrl": ".",
+      "paths": {
+          "@/*": ["./src/*"]
+      }
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+}
+  
