@@ -7,7 +7,11 @@ enum ListKindTab {
     Notice = 'notice'
 }
 
-const listTypeFilter = getStore<string>('listType', ListKindTab.All);
+const listTypeFilter = getStore<string>('listType', getSType());
+
+function getSType() {
+    return new URL(location.href).searchParams.get('exception_mode');
+}
 
 function makeListUrl(sType: string, bType: string) {
     var arrExceptionType = ["all","recommend","notice","movie","gallhit"];
