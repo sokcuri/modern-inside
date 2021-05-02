@@ -10,7 +10,7 @@ enum ListKindTab {
 const listTypeFilter = getStore<string>('listType', getSType());
 
 function getSType() {
-    return new URL(location.href).searchParams.get('exception_mode');
+    return new URL(location.href).searchParams.get('exception_mode') || 'all';
 }
 
 function makeListUrl(sType: string, bType: string) {
