@@ -13,6 +13,11 @@ if ($page_head?.querySelector('.pagehead_titicon.mgall')) {
     gall_type = '';
 }
 
+const list_search_heads = [...document.querySelectorAll('.center_box li > a')].map(x => ({
+    name: x.innerHTML,
+    searchHead: /^listSearchHead\('?([^'\)]+)'?\)$/.exec(x.getAttribute('onclick') || '')?.[1] || ''
+}));
+
 const gall_rank_title = document.querySelector('.ranking > .ranking_tit > span.blind')?.textContent;
 const gall_rank_num = document.querySelector('.ranking > .rank_img em.blind')?.textContent;
 
@@ -21,7 +26,8 @@ let metadata = {
     gall_title,
     gall_type,
     gall_rank_title,
-    gall_rank_num
+    gall_rank_num,
+    list_search_heads
 };
 
 export let meta = readable(metadata, () => {});

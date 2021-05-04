@@ -3,7 +3,7 @@ import type { Writable } from 'svelte/store';
 
 let stores: any = {}
 
-export function getStore<T>(id: string, initialValue: any): Writable<T> {
+export function getStore<T>(id: string, initialValue?: any): Writable<T> {
   return stores[id] || (stores[id] = writable(initialValue))
 }
 

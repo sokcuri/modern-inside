@@ -12,13 +12,12 @@ async function main() {
   target = document.querySelector('.list_array_option.clear > .array_tab.left_box');
   if (target) {
     new parts.ListTopArrayTab({ target, hydrate })
-  }  
-
-  // // target = document.querySelector('.issue_contentbox.clear');
-  // // if (target) {
-  // //   new parts.Board({ target, hydrate })
-  // // }
+  }
   
+  target = document.querySelector('.list_array_option.clear > .array_tab.left_box + .center_box');
+  if (target) {
+    new parts.ListTopCenterBox({ target, hydrate })
+  }
 }
 
 main();

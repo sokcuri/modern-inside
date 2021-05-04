@@ -1,5 +1,6 @@
 <script lang="ts">
 import { getStore } from '@/store';
+import { meta } from '@/store/meta';
 
 enum ListKindTab {
     All = 'all',
@@ -7,10 +8,33 @@ enum ListKindTab {
     Notice = 'notice'
 }
 
-const listTypeFilter = getStore<string>('listType', getSType());
+const listHeadFilter = getStore<string>('listSearchHead', getListHead());
+const listTypeFilter = getStore<string>('listType');
 
-function getSType() {
-    return new URL(location.href).searchParams.get('exception_mode') || 'all';
+function getListHead() {
+    return new URL(location.href).searchParams.get('search_head') || 'all';
+}
+
+async function onClickListSearchHead(listHeadId: string) {
+    listHeadFilter.update(_ => listHeadId);
+    setTimeout(() => onRequestGallList(listHeadId), 50);
+}
+
+async function onRequestGallList(listHeadId: string) {
+    const url = makeListUrl('search_head', listHeadId.toString()) as string;
+    const resp = await fetch(url as string);
+    const html = await resp.text();
+
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    const gall_list = div.querySelector('table.gall_list')?.innerHTML;
+
+    if ($listHeadFilter !== listHeadId) return;
+
+    if (gall_list) {
+        document.querySelector('table.gall_list')!.innerHTML = gall_list;
+    }
+    console.log('target url', url, html);
 }
 
 function makeListUrl(newParam: string, newValue: string) {
@@ -87,30 +111,16 @@ function makeListUrl(newParam: string, newValue: string) {
 	return list_url;
 }
 
-async function onClickListKindTab(listKindTab: ListKindTab) {
-    listTypeFilter.update(_ => listKindTab);
-    setTimeout(() => onRequestGallList(listKindTab), 50);
-}
-
-async function onRequestGallList(listKindTab: ListKindTab) {
-    const url = makeListUrl(listKindTab, 'list') as string;
-    const resp = await fetch(url as string);
-    const html = await resp.text();
-
-    const div = document.createElement('div');
-    div.innerHTML = html;
-    const gall_list = div.querySelector('table.gall_list')?.innerHTML;
-
-    if ($listTypeFilter !== listKindTab) return;
-
-    if (gall_list) {
-        document.querySelector('table.gall_list')!.innerHTML = gall_list;
-    }
-    console.log('target url', url, html);
-}
 </script>
 
-<button type="button" class={$listTypeFilter === ListKindTab.All ? 'on' : '' } on:click={_ => onClickListKindTab(ListKindTab.All)}>전체글</button>
-<button type="button" class={$listTypeFilter === ListKindTab.Recommend ? 'on' : '' } on:click={_ => onClickListKindTab(ListKindTab.Recommend)}>개념글</button>
-<button type="button" class={$listTypeFilter === ListKindTab.Notice ? 'on' : '' } on:click={_ => onClickListKindTab(ListKindTab.Notice)}>공지</button>
-<!--<button type="button" class="" onclick="listKindTab('movie','list');return false;">동영상</button>-->
+<!-- svelte-ignore a11y-invalid-attribute -->
+<div class="inner">
+    {#if $listTypeFilter !== ListKindTab.Notice}
+    <ul>
+        {#each $meta.list_search_heads as head}
+            <li><a href="javascript:;" on:click={() => onClickListSearchHead(head.searchHead)} class={head.searchHead === $listHeadFilter ? 'on' : ''}>{head.name}</a></li>
+        {/each}
+
+    </ul>
+    {/if}
+</div>
